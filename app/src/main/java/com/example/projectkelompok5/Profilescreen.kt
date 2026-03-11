@@ -2,7 +2,6 @@ package com.example.projectkelompok5
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -22,19 +21,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 
+private val PrimaryPink = Color(0xFFE91E8C)
+private val LightPink = Color(0xFFFFF0F5)
+private val TextGray = Color(0xFF888888)
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(navController: NavController) {
-    val pink = Color(0xFFE91E8C)
     val scrollState = rememberScrollState()
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text("Profil Saya", fontWeight = FontWeight.Bold, color = Color.White) },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = pink),
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = PrimaryPink),
                 actions = {
-                    // Tombol ke Avatar
                     IconButton(onClick = { navController.navigate(Routes.AVATAR) }) {
                         Icon(Icons.Default.Face, contentDescription = "Avatar", tint = Color.White)
                     }
@@ -45,7 +46,7 @@ fun ProfileScreen(navController: NavController) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFFFFF0F5))
+                .background(LightPink)
                 .padding(innerPadding)
                 .verticalScroll(scrollState),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -54,12 +55,11 @@ fun ProfileScreen(navController: NavController) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(pink)
+                    .background(PrimaryPink)
                     .padding(vertical = 32.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    // Avatar placeholder (lingkaran)
                     Box(
                         modifier = Modifier
                             .size(90.dp)
@@ -72,12 +72,12 @@ fun ProfileScreen(navController: NavController) {
                             text = UserData.firstName.take(1).uppercase(),
                             fontSize = 36.sp,
                             fontWeight = FontWeight.Bold,
-                            color = pink
+                            color = PrimaryPink
                         )
                     }
                     Spacer(modifier = Modifier.height(10.dp))
                     Text(
-                        "${UserData.firstName} ${UserData.lastName}",
+                        text = "${UserData.firstName} ${UserData.lastName}",
                         fontWeight = FontWeight.Bold,
                         fontSize = 20.sp,
                         color = Color.White
@@ -88,18 +88,17 @@ fun ProfileScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Tombol ke halaman Avatar
             OutlinedButton(
                 onClick = { navController.navigate(Routes.AVATAR) },
                 modifier = Modifier.padding(bottom = 8.dp),
                 shape = RoundedCornerShape(20.dp),
-                colors = ButtonDefaults.outlinedButtonColors(contentColor = pink)
+                colors = ButtonDefaults.outlinedButtonColors(contentColor = PrimaryPink)
             ) {
                 Icon(Icons.Default.Face, contentDescription = null, modifier = Modifier.padding(end = 6.dp))
                 Text("Lihat Avatar Saya")
             }
 
-            // Info cards
+            // Informasi Akun
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -109,15 +108,16 @@ fun ProfileScreen(navController: NavController) {
                 elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
             ) {
                 Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Text("Informasi Akun", fontWeight = FontWeight.Bold, color = pink, fontSize = 15.sp)
+                    Text("Informasi Akun", fontWeight = FontWeight.Bold, color = PrimaryPink, fontSize = 15.sp)
                     ProfileInfoRow(Icons.Default.Email, "Email", UserData.email)
                     ProfileInfoRow(Icons.Default.AccountCircle, "Username", UserData.username)
-                    ProfileInfoRow(Icons.Default.Lock, "Password", "••••••••")
+                    ProfileInfoRow(Icons.Default.Lock, "Password", "••••••••") // Menutupi password adalah ide bagus!
                 }
             }
 
             Spacer(modifier = Modifier.height(8.dp))
 
+            // Data Pribadi
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -127,7 +127,7 @@ fun ProfileScreen(navController: NavController) {
                 elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
             ) {
                 Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Text("Data Pribadi", fontWeight = FontWeight.Bold, color = pink, fontSize = 15.sp)
+                    Text("Data Pribadi", fontWeight = FontWeight.Bold, color = PrimaryPink, fontSize = 15.sp)
                     ProfileInfoRow(Icons.Default.Phone, "Telepon", UserData.phone)
                     ProfileInfoRow(Icons.Default.DateRange, "Tanggal Lahir", UserData.birthDate)
                     ProfileInfoRow(Icons.Default.Face, "Jenis Kelamin", UserData.gender)
@@ -138,11 +138,12 @@ fun ProfileScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Tombol Logout
+            // Tombol Logout dengan perbaikan Clear Backstack
             Button(
                 onClick = {
                     navController.navigate(Routes.LOGIN) {
-                        popUpTo(Routes.LOGIN) { inclusive = true }
+                        popUpTo(0) { inclusive = true } // Menghapus semua riwayat halaman agar aman
+                        launchSingleTop = true
                     }
                 },
                 modifier = Modifier
@@ -164,10 +165,10 @@ fun ProfileScreen(navController: NavController) {
 @Composable
 fun ProfileInfoRow(icon: ImageVector, label: String, value: String) {
     Row(verticalAlignment = Alignment.CenterVertically) {
-        Icon(icon, contentDescription = null, tint = Color(0xFFE91E8C), modifier = Modifier.size(20.dp))
+        Icon(icon, contentDescription = null, tint = PrimaryPink, modifier = Modifier.size(20.dp))
         Spacer(modifier = Modifier.width(12.dp))
         Column {
-            Text(label, fontSize = 11.sp, color = Color(0xFF888888))
+            Text(label, fontSize = 11.sp, color = TextGray)
             Text(value.ifEmpty { "-" }, fontSize = 14.sp, fontWeight = FontWeight.Medium)
         }
     }
