@@ -29,7 +29,7 @@ fun AvatarScreen(navController: NavController) {
     var showMouth by remember { mutableStateOf(true) }
 
     // URL gambar komponen wajah dari internet (Picsum sebagai placeholder)
-    // Ganti URL ini dengan gambar komponen wajah yang sebenarnya dari resource
+    // Ganti URL ini dengan gambar komponen wajah yang sebenarnya dari resource asli
     val faceBase   = "https://picsum.photos/seed/face-base/300/300"
     val browUrl    = "https://picsum.photos/seed/face-brow/300/300"
     val eyeUrl     = "https://picsum.photos/seed/face-eye/300/300"
